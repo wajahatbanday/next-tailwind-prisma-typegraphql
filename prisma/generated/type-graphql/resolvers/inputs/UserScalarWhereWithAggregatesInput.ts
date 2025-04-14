@@ -3,6 +3,7 @@ import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../../scalars";
 import { DateTimeWithAggregatesFilter } from "../inputs/DateTimeWithAggregatesFilter";
+import { EnumRoleWithAggregatesFilter } from "../inputs/EnumRoleWithAggregatesFilter";
 import { StringWithAggregatesFilter } from "../inputs/StringWithAggregatesFilter";
 
 @TypeGraphQL.InputType("UserScalarWhereWithAggregatesInput", {})
@@ -41,6 +42,11 @@ export class UserScalarWhereWithAggregatesInput {
     nullable: true
   })
   password?: StringWithAggregatesFilter | undefined;
+
+  @TypeGraphQL.Field(_type => EnumRoleWithAggregatesFilter, {
+    nullable: true
+  })
+  role?: EnumRoleWithAggregatesFilter | undefined;
 
   @TypeGraphQL.Field(_type => DateTimeWithAggregatesFilter, {
     nullable: true

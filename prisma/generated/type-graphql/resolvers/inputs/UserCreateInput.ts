@@ -2,6 +2,8 @@ import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../../scalars";
+import { PostCreateNestedManyWithoutAuthorInput } from "../inputs/PostCreateNestedManyWithoutAuthorInput";
+import { Role } from "../../enums/Role";
 
 @TypeGraphQL.InputType("UserCreateInput", {})
 export class UserCreateInput {
@@ -25,6 +27,11 @@ export class UserCreateInput {
   })
   password!: string;
 
+  @TypeGraphQL.Field(_type => Role, {
+    nullable: false
+  })
+  role!: "USER" | "ADMIN";
+
   @TypeGraphQL.Field(_type => Date, {
     nullable: true
   })
@@ -34,4 +41,9 @@ export class UserCreateInput {
     nullable: true
   })
   updatedAt?: Date | undefined;
+
+  @TypeGraphQL.Field(_type => PostCreateNestedManyWithoutAuthorInput, {
+    nullable: true
+  })
+  posts?: PostCreateNestedManyWithoutAuthorInput | undefined;
 }

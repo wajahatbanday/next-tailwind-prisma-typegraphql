@@ -1,3 +1,17 @@
+export { AggregatePostResolver } from "./Post/AggregatePostResolver";
+export { CreateManyPostResolver } from "./Post/CreateManyPostResolver";
+export { CreateOnePostResolver } from "./Post/CreateOnePostResolver";
+export { DeleteManyPostResolver } from "./Post/DeleteManyPostResolver";
+export { DeleteOnePostResolver } from "./Post/DeleteOnePostResolver";
+export { FindFirstPostResolver } from "./Post/FindFirstPostResolver";
+export { FindFirstPostOrThrowResolver } from "./Post/FindFirstPostOrThrowResolver";
+export { FindManyPostResolver } from "./Post/FindManyPostResolver";
+export { FindUniquePostResolver } from "./Post/FindUniquePostResolver";
+export { FindUniquePostOrThrowResolver } from "./Post/FindUniquePostOrThrowResolver";
+export { GroupByPostResolver } from "./Post/GroupByPostResolver";
+export { UpdateManyPostResolver } from "./Post/UpdateManyPostResolver";
+export { UpdateOnePostResolver } from "./Post/UpdateOnePostResolver";
+export { UpsertOnePostResolver } from "./Post/UpsertOnePostResolver";
 export { AggregateUserResolver } from "./User/AggregateUserResolver";
 export { CreateManyUserResolver } from "./User/CreateManyUserResolver";
 export { CreateOneUserResolver } from "./User/CreateOneUserResolver";

@@ -5,6 +5,7 @@ import { DecimalJSScalar } from "../../scalars";
 import { UserCountAggregate } from "../outputs/UserCountAggregate";
 import { UserMaxAggregate } from "../outputs/UserMaxAggregate";
 import { UserMinAggregate } from "../outputs/UserMinAggregate";
+import { Role } from "../../enums/Role";
 
 @TypeGraphQL.ObjectType("UserGroupBy", {})
 export class UserGroupBy {
@@ -27,6 +28,11 @@ export class UserGroupBy {
     nullable: false
   })
   password!: string;
+
+  @TypeGraphQL.Field(_type => Role, {
+    nullable: false
+  })
+  role!: "USER" | "ADMIN";
 
   @TypeGraphQL.Field(_type => Date, {
     nullable: false

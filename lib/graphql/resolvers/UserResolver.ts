@@ -5,12 +5,16 @@ import {
   InputType,
   Field,
   ObjectType,
+  Query,
+  Ctx,
 } from "type-graphql";
-import { User } from "../../../prisma/generated/type-graphql";
+import { Post, User } from "../../../prisma/generated/type-graphql";
 import bcrypt from "bcryptjs";
 import { GraphQLError } from "graphql";
 import jwt from "jsonwebtoken";
 import prisma from "../../../lib/prisma";
+import { AuthGuard } from "../middleware/authGuard";
+import { Role } from "@prisma/client";
 
 // Define an Input Type for user creation
 @InputType()
@@ -45,6 +49,12 @@ class LoginResponse {
   user: User;
 }
 
+@InputType()
+class CreatePostInput {
+  @Field()
+  content: string;
+}
+
 // Resolver for user-related operations
 @Resolver()
 export class UserResolver {
@@ -69,6 +79,7 @@ export class UserResolver {
         data: {
           name: data.name,
           email: data.email,
+          role: Role.USER,
           password: hashedPassword,
         },
       });
@@ -88,14 +99,6 @@ export class UserResolver {
       // Find the user by email
       const user = await prisma.user.findUnique({
         where: { email },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          password: true,
-          createdAt: true,
-          updatedAt: true,
-        },
       });
 
       const validPassword = await bcrypt.compare(password, user.password);
@@ -110,6 +113,7 @@ export class UserResolver {
       const token = jwt.sign(
         {
           userId: user.id,
+          role: user.role,
         },
         JWT_SECRET,
         { expiresIn: "999d" }
@@ -119,6 +123,7 @@ export class UserResolver {
         id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
         password: undefined,
@@ -132,6 +137,69 @@ export class UserResolver {
       console.error("Login error:", error);
       throw new GraphQLError(
         error instanceof Error ? error.message : "Login Failed"
+      );
+    }
+  }
+
+  @Mutation(() => Post)
+  @AuthGuard(Role.USER)
+  async createPost(
+    @Arg("input") data: CreatePostInput,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    @Ctx() ctx: any
+  ): Promise<Post> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.user.id,
+        },
+      });
+
+      if (!user) {
+        throw new GraphQLError("User Not Found");
+      }
+
+      const post = await prisma.post.create({
+        data: {
+          ...data,
+          authorId: user.id,
+        },
+      });
+
+      return post;
+    } catch (e) {
+      console.error(e);
+      throw new GraphQLError(
+        e instanceof Error ? e.message : "Internal Server Error"
+      );
+    }
+  }
+  @Query(() => [Post])
+  @AuthGuard(Role.USER)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async myPosts(@Ctx() ctx: any) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          id: ctx.user.id,
+        },
+      });
+
+      if (!user) {
+        throw new GraphQLError("User Not Found");
+      }
+
+      const posts = await prisma.post.findMany({
+        where: {
+          authorId: user.id,
+        },
+      });
+
+      return posts;
+    } catch (e) {
+      console.error(e);
+      throw new GraphQLError(
+        e instanceof Error ? e.message : "Internal Server Error"
       );
     }
   }

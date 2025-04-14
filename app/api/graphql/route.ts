@@ -18,10 +18,18 @@ const initializeApolloServer = async () => {
   });
 
   return startServerAndCreateNextHandler(server, {
-    context: async (req) => ({
-      prisma,
-      req,
-    }),
+    context: async (req: NextRequest) => {
+      const reqHeaders = Object.fromEntries(req.headers.entries());
+
+      return {
+        prisma,
+        req: {
+          headers: {
+            authorization: reqHeaders.authorization,
+          },
+        },
+      };
+    },
   });
 };
 

@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cw": "graphql-codegen --config codegen.ts --watch",
     "postinstall": "yarn prisma generate",
+    "cw": "graphql-codegen --config codegen.ts --watch",
     "dg": "nodemon --watch 'prisma/**/*' --ext 'prisma' --exec 'yarn prisma generate'"
   },
   "dependencies": {
