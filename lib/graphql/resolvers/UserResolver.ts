@@ -15,6 +15,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../../../lib/prisma";
 import { AuthGuard } from "../middleware/authGuard";
 import { Role } from "@prisma/client";
+import { GraphQLContext } from "../middleware/auth.types";
 
 // Define an Input Type for user creation
 @InputType()
@@ -145,17 +146,16 @@ export class UserResolver {
   @AuthGuard(Role.USER)
   async createPost(
     @Arg("input") data: CreatePostInput,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Ctx() ctx: any
+    @Ctx() { user }: GraphQLContext
   ): Promise<Post> {
     try {
-      const user = await prisma.user.findUnique({
+      const existingUser = await prisma.user.findUnique({
         where: {
-          id: ctx.user.id,
+          id: user.id,
         },
       });
 
-      if (!user) {
+      if (!existingUser) {
         throw new GraphQLError("User Not Found");
       }
 
@@ -176,16 +176,15 @@ export class UserResolver {
   }
   @Query(() => [Post])
   @AuthGuard(Role.USER)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async myPosts(@Ctx() ctx: any) {
+  async myPosts(@Ctx() { user }: GraphQLContext) {
     try {
-      const user = await prisma.user.findUnique({
+      const existingUser = await prisma.user.findUnique({
         where: {
-          id: ctx.user.id,
+          id: user.id,
         },
       });
 
-      if (!user) {
+      if (!existingUser) {
         throw new GraphQLError("User Not Found");
       }
 

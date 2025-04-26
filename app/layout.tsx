@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { BaseLayout } from "./components";
+import BaseLayout from "@/components/BaseLayout";
 
 export const metadata: Metadata = {
   title: "Next.js + Tailwind + Prisma + TypeGraphQL",
@@ -25,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="font-poppinsRegular antialiased">
+      <body className="font-poppinsRegular antialiased bg-primary">
         <BaseLayout>{children}</BaseLayout>
       </body>
     </html>

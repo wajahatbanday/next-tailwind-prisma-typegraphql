@@ -19,3 +19,7 @@
   --font-poppinsRegular: "PoppinsRegular";
   --font-montserratRegular: "MontserratRegular";
 }
+
+.glass {
+  background-color: rgba(0, 0, 0, 0.4);
+}

@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { PrismaClient, Role } from "@prisma/client";
 
 export interface JwtPayload {
   userId: string;
@@ -19,3 +19,14 @@ export interface GenericRequest {
 
 // Define the next function type
 export type NextFn = () => Promise<unknown>;
+
+export interface User {
+  id: string;
+  roles: Role;
+}
+
+export interface GraphQLContext {
+  prisma: PrismaClient;
+  req: GenericRequest;
+  user?: User;
+}

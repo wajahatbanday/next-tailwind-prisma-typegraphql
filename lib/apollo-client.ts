@@ -8,15 +8,28 @@ const httpLink = createHttpLink({
     process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
     (typeof window !== "undefined"
       ? "/api/graphql" // In browser
-      : "http://localhost:3000/api/graphql"),
+      : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}/api/graphql` // On Vercel
+      : "http://localhost:3000/api/graphql"), // Local development fallback
 });
 
 const authLink = setContext((_, { headers }) => {
-  //   const token = localStorage.getItem("farm2i-token");
+  // Get the token from cookies
+  // const getCookie = (name: string): string | undefined => {
+  //   if (typeof window === "undefined") return undefined;
+
+  //   const value = `; ${document.cookie}`;
+  //   const parts = value.split(`; ${name}=`);
+  //   if (parts.length === 2) return parts.pop()?.split(";").shift();
+  //   return undefined;
+  // };
+
+  // const token = getCookie("token");
+
   return {
     headers: {
       ...headers,
-      //   authorization: token ? `Bearer ${token}` : "",
+      // authorization: token ? `Bearer ${token}` : "",
     },
   };
 });
